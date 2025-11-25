@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  data-gov-au-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: data-gov-au-mcp:1.0.0
+    environment:
+      DATAGOVAU_API_KEY: ${DATAGOVAU_API_KEY}
+      PORT: ${PORT:-3000}
+    ports:
+      # host:container
+      - "${HOST_PORT:-3000}:3000"
+    restart: unless-stopped
+    # Optional: healthcheck if you add curl/wget
+    # healthcheck:
+    #   test: ["CMD", "wget", "-qO-", "http://localhost:3000/mcp || exit 1"]
+    #   interval: 30s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 10s
+
