@@ -3,6 +3,8 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import express from "express";
 import { z } from "zod";
 import "dotenv/config";
+import https from "https";
+import fs from "fs";
 
 const DATAGOV_API_BASE = "https://data.gov.au/api/3/action";
 const DATAGOV_DATASTORE_BASE =
@@ -366,12 +368,29 @@ app.post("/mcp", async (req, res) => {
 
 const port = parseInt(process.env.PORT ?? "3000", 10);
 
-app
-  .listen(port, () => {
-    console.log(`data.gov.au MCP server running on http://localhost:${port}/mcp`);
-  })
-  .on("error", (error) => {
-    console.error("Express server error:", error);
-    process.exit(1);
-  });
+if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH) {
+  const options = {
+    key: fs.readFileSync(process.env.SSL_KEY_PATH),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+  };
+
+  https
+    .createServer(options, app)
+    .listen(port, () => {
+      console.log(`data.gov.au MCP server running on https://localhost:${port}/mcp`);
+    })
+    .on("error", (error) => {
+      console.error("HTTPS server error:", error);
+      process.exit(1);
+    });
+} else {
+  app
+    .listen(port, () => {
+      console.log(`data.gov.au MCP server running on http://localhost:${port}/mcp`);
+    })
+    .on("error", (error) => {
+      console.error("Express server error:", error);
+      process.exit(1);
+    });
+}
 

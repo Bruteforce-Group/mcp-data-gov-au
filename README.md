@@ -21,9 +21,23 @@ This is a Model Context Protocol (MCP) server for data.gov.au, allowing AI assis
     npm start
     ```
 
+## HTTPS Support
+
+To enable HTTPS, set the following environment variables in your `.env` file:
+
+```env
+SSL_KEY_PATH=./certs/server.key
+SSL_CERT_PATH=./certs/server.cert
+```
+
+You can generate self-signed certificates for development using the provided script:
+
+```bash
+./generate-certs.sh
+```
+
 ## Docker
 
 ```bash
 docker compose up -d
 ```
-
