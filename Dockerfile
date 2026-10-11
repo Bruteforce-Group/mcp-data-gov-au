@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # Base image with Node 20 (multi-arch: supports amd64 + arm64)
-FROM node:20-alpine AS base
+FROM node:25-alpine AS base
 WORKDIR /app
 
 # --- Builder stage: install deps + build TypeScript ---
